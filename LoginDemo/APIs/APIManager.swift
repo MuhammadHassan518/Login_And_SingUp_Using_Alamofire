@@ -13,20 +13,19 @@ public class API{
     
     public func Login(vc:UIViewController,params: [String : Any], completionhandler:((String) -> ())?) {
 
-        AF.request("http://198.101.12.193:30000/auth/token", method: .post,  parameters: params, encoding: JSONEncoding.default)
+        AF.request("http://209.126.81.76/ducktindo_dev2/api/auth/login", method: .post,  parameters: params, encoding: JSONEncoding.default)
                                 .responseJSON { response in
                                 switch response.result {
                                 case .success(let value):
                                     if let json = value as? [String: Any] {
-                                    print(json["access_token"] as? String ?? String())
-                                    let newtoken = json["access_token"] as? String
-
+                                    let newtoken = json["data"] as? [String:Any]
+                                    print(newtoken?["access_token"] ?? "Token not found")
+                                      
                                 if newtoken != nil
                                 {
-                                   print("you reach there")
-                                   completionhandler?(newtoken ?? "")
+                                    completionhandler?("\(String(describing: newtoken) )")
                                 }
-        
+
                             else
                             {
                                 completionhandler?("")
@@ -38,9 +37,8 @@ public class API{
                                     
                         }
                         case .failure(_):
-                        print("some error occured")
+                        print("Invalid Email_ID or Password")
                        }
                     }
                }
 }
-
