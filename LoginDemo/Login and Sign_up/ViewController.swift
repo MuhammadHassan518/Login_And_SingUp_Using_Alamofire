@@ -6,17 +6,13 @@
 //
 
 import UIKit
-import Alamofire
 
 class ViewController: UIViewController {
 
     @IBOutlet weak var txtEmail: UITextField!
     @IBOutlet weak var txtPassword: UITextField!
-    
     @IBOutlet weak var btnSinup: UIButton!
     @IBOutlet weak var btnLogin: UIButton!
-    
-    
     
     let api = API()
     override func viewDidLoad() {
@@ -26,13 +22,9 @@ class ViewController: UIViewController {
     @IBAction func btnLoginClicked(_ sender: Any)
     {
         if txtEmail.text != "" && txtPassword.text != ""
-        {
-            self.textValidate()
-        }
+        { self.textValidate() }
         else
-        {
-            self.Alert()
-        }
+        { self.Alert() }
     }
     
     @IBAction func btnSignUp(_ sender: Any)
@@ -51,22 +43,20 @@ extension ViewController
         {
             if !email.validateEmailId()
             {
-             openAlert(title: "Alert", message: "Email address not found.", alertStyle: .alert, actionTitles: ["Okay"], actionStyles: [.default], actions: [{ _ in
-                           /* print("Okay clicked!") */ }])
+             openAlert(title: "Alert", message: "Email address not found.", alertStyle: .alert, actionTitles: ["Okay"], actionStyles: [.default], actions: [{ _ in }])
             }
             
             else if !password.validatePassword()
             {
-            openAlert(title: "Alert", message: "Please enter valid password", alertStyle: .alert, actionTitles: ["Okay"], actionStyles: [.default], actions: [{ _ in
-                            /*  print("Okay clicked!") */ }])
+            openAlert(title: "Alert", message: "Please enter valid password", alertStyle: .alert, actionTitles: ["Okay"], actionStyles: [.default], actions: [{ _ in }])
             }
+            
             else { Login() }
             
         }
         // empty textfields alert
-                    else{
-                    openAlert(title: "Alert", message: "Please add detail.", alertStyle: .alert, actionTitles: ["Okay"], actionStyles: [.default], actions: [{ _ in }])
-                        }
+        else{
+        openAlert(title: "Alert", message: "Please add detail.", alertStyle: .alert, actionTitles: ["Okay"], actionStyles: [.default], actions: [{ _ in }]) }
     }// textvalidate function end here
         
     func Alert (){
@@ -74,13 +64,13 @@ extension ViewController
            }
 
    public func Login() {
-           
-       api.Login(vc: self, params: ["email": txtEmail.text!, "password": txtPassword.text!, "firebase_token":"34235232"])
-       { token in
+       api.Login(vc: self, params: ["email": txtEmail.text!, "password": txtPassword.text!, "firebase_token":"34235232"], url: "http://209.126.81.76/ducktindo_dev2/api/auth/login")
+       { token,result  in
         if !token.isEmpty
         {
         let HomeVC = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-        self.navigationController?.pushViewController(HomeVC, animated: true)
+            HomeVC.model = result
+            self.navigationController?.pushViewController(HomeVC, animated: true)
         }
       }
     }

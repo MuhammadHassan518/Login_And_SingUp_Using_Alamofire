@@ -6,6 +6,8 @@ target 'LoginDemo' do
   use_frameworks!
 pod 'Alamofire', '~> 5.5'
 pod 'ObjectMapper', '~> 3.5'
+pod 'SDWebImage', '~> 5.0'
+
   # Pods for LoginDemo
 
 end
