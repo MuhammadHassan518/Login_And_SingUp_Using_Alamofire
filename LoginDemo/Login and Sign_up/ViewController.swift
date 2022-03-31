@@ -69,7 +69,7 @@ extension ViewController
         if !token.isEmpty
         {
         let HomeVC = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-            HomeVC.model = result
+            HomeVC.userModel = result
             self.navigationController?.pushViewController(HomeVC, animated: true)
         }
       }

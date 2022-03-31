@@ -23,7 +23,7 @@ public class API{
                          print(newtoken?["access_token"] ?? "Token not found")
                          
                        let status = json["status"] as? Bool
-                         var message = json["message"] as? String
+                         let message = json["message"] as? String
                          if status == false
                          {
                              let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertController.Style.alert)
@@ -32,7 +32,7 @@ public class API{
                          }
                          let a = response.data
                          do {
-                             let responseData = String(data: a!, encoding: String.Encoding.utf8)
+//                             let responseData = String(data: a!, encoding: String.Encoding.utf8)
                              let result = try JSONDecoder().decode(Json4Swift_Base.self, from: a!)
                              if newtoken != nil
                              { completionhandler?("\(String(describing: newtoken) )", result) }
@@ -52,8 +52,7 @@ public class API{
              }
      }
         
-    func UploadData(vc:UIViewController,params: [String : Any],img:UIImage, url: String, header: HTTPHeaders, completionhandler:((String, Json4Swift_Base) -> ())?)  {
-
+    func UploadData(vc:UIViewController,params: [String : Any],img:UIImage, url: String, header: HTTPHeaders, completionhandler:((Int,UpdateModel) -> ())?)  {
         AF.upload(
                multipartFormData: { multipartFormData in
                    multipartFormData.append(img.jpegData(
@@ -73,32 +72,25 @@ public class API{
            .response { response in
                switch response.result {
                case .success(let value):
-                   print(value)
                    var b = [String:Any]()
                    do{
                    let json = try JSONSerialization.jsonObject(with: value!, options: []) as? [String : Any]
                        b = json ?? [String:Any]()
-                   }catch{ print("erroMsg") }
-                   if let json = b as? [String: Any] {
-                       let newtoken = json["data"] as? [String:Any]
-                       print(newtoken?["access_token"] ?? "Token not found")
-                       let a = response.data
-                       do {
-                           let responseData = String(data: a!, encoding: String.Encoding.utf8)
-                           let result = try JSONDecoder().decode(Json4Swift_Base.self, from: a!)
-                           if newtoken != nil
-                       {  completionhandler?("\(String(describing: newtoken) )", result) }
-                       else
-                       {
-                            completionhandler?("", result)
-                           let alert = UIAlertController(title: "Alert", message: "invalid Email_ID or password", preferredStyle: UIAlertController.Style.alert)
-                           alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                           vc.present(alert, animated: true, completion: nil)
-                       }
-                       }
-                       catch { print(error) }
+                       print(b)
+                   }
+                   catch{ print("erroMsg") }
+                   let status = b["status"]
+                   let data = b["data"]
+                   print(status ?? 0)
+                   if status as! Int == 1
+                   {
+                       print("status \(status!) founded")
+                       let result = try JSONDecoder().decode(Json4Swift_Base.self, from: a!)
+                       completionhandler?(status as! Int,UpdateModel)
+                   }
+                   else
+                   { print("Invalid data entered") }
                    
-               }
                case .failure(_):
                    print("failed to upload data")
                }

@@ -10,13 +10,12 @@ import Alamofire
 
 class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate
  {
-
+    var userModel: Json4Swift_Base?
     @IBOutlet weak var txtMobileNumber: UITextField!
     @IBOutlet weak var txtGender: UITextField!
     @IBOutlet weak var txtName: UITextField!
     @IBOutlet weak var lblImage: UIImageView!
     
-    var model: Json4Swift_Base?
     var imagePicker = UIImagePickerController()
     let api = API()
 
@@ -52,16 +51,19 @@ class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavig
         ] as [String : Any]
         
         let url = "http://209.126.81.76/ducktindo_dev2/api/v1/update_user"
-        let token = model?.data?.access_token ?? ""
+        let token = userModel?.data?.access_token ?? ""
         let header : HTTPHeaders = ["Authorization": "Bearer \(token)"]
         
         api.UploadData(vc: self, params: param, img: lblImage.image ?? UIImage(), url: url, header: header)
-        {
-            token,Result in
-            if !token.isEmpty
+        { [self]
+            status, Data, UpdateModel in
+            if status == 1
             {
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-                self.navigationController?.pushViewController(vc, animated: true)
+                vc.updateModel = UpdateModel
+                print(userModel?.data?.user?.name)
+                print(Data)
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }
