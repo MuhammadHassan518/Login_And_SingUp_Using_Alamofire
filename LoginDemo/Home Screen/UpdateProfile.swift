@@ -11,6 +11,8 @@ import Alamofire
 class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate
  {
     var userModel: Json4Swift_Base?
+    var updateModel: UpdateModel_Base?
+
     @IBOutlet weak var txtMobileNumber: UITextField!
     @IBOutlet weak var txtGender: UITextField!
     @IBOutlet weak var txtName: UITextField!
@@ -56,14 +58,13 @@ class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavig
         
         api.UploadData(vc: self, params: param, img: lblImage.image ?? UIImage(), url: url, header: header)
         { [self]
-            status, Data, UpdateModel in
+            status, Data in
             if status == 1
             {
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-                vc.updateModel = UpdateModel
-                print(userModel?.data?.user?.name)
-                print(Data)
-                self.navigationController?.popViewController(animated: true)
+                vc.updateModel = updateModel
+                print(updateModel?.data?.name)
+                self.navigationController?.pushViewController(vc, animated: true)//(animated: true)
             }
         }
     }

@@ -34,9 +34,7 @@ class HomeVC: UIViewController {
         print( userModel?.data?.user?.photo ?? "")
 
     }
-    override func viewWillAppear(_ animated: Bool) {
-        <#code#>
-    }
+  //  override func viewWillAppear(_ animated: Bool) {}
      
     @IBAction func btnUpdateClicked(_ sender: UIButton) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "UpdateProfile") as! UpdateProfile

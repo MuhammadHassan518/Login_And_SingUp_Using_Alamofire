@@ -52,7 +52,7 @@ public class API{
              }
      }
         
-    func UploadData(vc:UIViewController,params: [String : Any],img:UIImage, url: String, header: HTTPHeaders, completionhandler:((Int,UpdateModel) -> ())?)  {
+    func UploadData(vc:UIViewController,params: [String : Any],img:UIImage, url: String, header: HTTPHeaders, completionhandler:((Int,Any) -> ())?)  {
         AF.upload(
                multipartFormData: { multipartFormData in
                    multipartFormData.append(img.jpegData(
@@ -81,12 +81,13 @@ public class API{
                    catch{ print("erroMsg") }
                    let status = b["status"]
                    let data = b["data"]
+                   print(data as Any)
                    print(status ?? 0)
                    if status as! Int == 1
                    {
                        print("status \(status!) founded")
-                       let result = try JSONDecoder().decode(Json4Swift_Base.self, from: a!)
-                       completionhandler?(status as! Int,UpdateModel)
+//                       let result = try JSONDecoder().decode(Json4Swift_Base.self, from: a!)
+                       completionhandler?(status as! Int, data as Any )
                    }
                    else
                    { print("Invalid data entered") }

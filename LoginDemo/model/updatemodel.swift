@@ -139,7 +139,7 @@ struct Categories : Codable {
 }
 struct UpdateModel_Base : Codable {
     let status : Bool?
-    let data : UpdateModel?
+    var data : UpdateModel?
     let message : String?
 
     enum CodingKeys: String, CodingKey {
