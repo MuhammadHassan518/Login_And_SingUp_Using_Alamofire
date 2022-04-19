@@ -77,6 +77,9 @@ public class API{
                    let json = try JSONSerialization.jsonObject(with: value!, options: []) as? [String : Any]
                        b = json ?? [String:Any]()
                        print(b)
+                       // json?["data"]
+                       let decoder = JSONDecoder()
+
                    }
                    catch{ print("erroMsg") }
                    let status = b["status"]

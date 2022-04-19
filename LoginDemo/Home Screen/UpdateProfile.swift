@@ -62,8 +62,7 @@ class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavig
             if status == 1
             {
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-                vc.updateModel = updateModel
-                print(updateModel?.data?.name)
+                vc.updateModel = Data as? UpdateModel_Base
                 self.navigationController?.pushViewController(vc, animated: true)//(animated: true)
             }
         }
@@ -73,13 +72,31 @@ class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavig
     // Image Upload methods
     @IBAction func ImageUpload(_ sender: UIButton)
     {
-        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
-            imagePicker.delegate = self
-            imagePicker.sourceType = .photoLibrary
-            imagePicker.allowsEditing = false
-            present(imagePicker, animated: true, completion: nil)
-        }
+        let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
+               alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+                   self.AccessForPhotos(Controller: UIImagePickerController.SourceType.camera)
+               }))
+               alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { _ in
+                   self.AccessForPhotos(Controller: UIImagePickerController.SourceType.photoLibrary)
+               }))
+               alert.addAction(UIAlertAction.init(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+        
     }
+    
+    func AccessForPhotos(Controller: UIImagePickerController.SourceType)
+    {
+        if UIImagePickerController.isSourceTypeAvailable(Controller){
+                    imagePicker.delegate = self
+                    imagePicker.sourceType = Controller
+                    imagePicker.allowsEditing = false
+                    present(imagePicker, animated: true, completion: nil)
+                    lblImage.layer.cornerRadius = 90
+
+                }
+    }
+    
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]){
         picker.dismiss(animated: true, completion: nil)
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
