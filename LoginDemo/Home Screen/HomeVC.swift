@@ -12,6 +12,7 @@ class HomeVC: UIViewController {
 
     var updateModel: UpdateModel_Base?
     var userModel: Json4Swift_Base?
+    var newcheck = false
     @IBOutlet weak var lblName: UILabel!
     @IBOutlet weak var lblGender: UILabel!
     @IBOutlet weak var lblBirthday: UILabel!
@@ -23,6 +24,21 @@ class HomeVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if newcheck == true {
+            lblName.text = "Name : " + (updateModel?.data?.name ?? "Name not found" )
+            lblEmail.text = "Email: " + (updateModel?.data?.email ?? "Email Not found")
+            lblGender.text = "Gender: " + (updateModel?.data?.gender ?? "Gender Not found")
+            lblBirthday.text = "Birthday: " + (updateModel?.data?.birthday ?? "Birthday Not found")
+            lblFollower.text = "Followers: \(String(describing: updateModel?.data?.followers ?? 00))"
+            lblCountry.text = "country: " + (updateModel?.data?.country_id ?? "Country Not found")
+            lblMarital.text = "Maried: " + (updateModel?.data?.marital_status ?? "Maried status Not found")
+            lblImage.sd_setImage(with: URL(string: updateModel?.data?.photo ?? "Image not found" ))
+            
+        }
+
+        else
+        {
         lblName.text = "Name: " + (userModel?.data?.user?.name ?? "Name Not found")
         lblEmail.text = "Email: " + (userModel?.data?.user?.email ?? "Email Not found")
         lblGender.text = "Gender: " + (userModel?.data?.user?.gender ?? "Gender Not found")
@@ -31,14 +47,13 @@ class HomeVC: UIViewController {
         lblCountry.text = "country: " + (userModel?.data?.user?.country_id ?? "Country Not found")
         lblMarital.text = "Maried: " + (userModel?.data?.user?.marital_status ?? "Maried status Not found")
         lblImage.sd_setImage(with: URL(string: userModel?.data?.user?.photo ?? "" ))
-        print( userModel?.data?.user?.photo ?? "")
-
+        }
     }
-  //  override func viewWillAppear(_ animated: Bool) {}
      
     @IBAction func btnUpdateClicked(_ sender: UIButton) {
         let vc = self.storyboard?.instantiateViewController(withIdentifier: "UpdateProfile") as! UpdateProfile
         vc.userModel = userModel
+        vc.checkbutton = true
         self.navigationController?.pushViewController(vc, animated: true)
         }
     

@@ -11,13 +11,13 @@ import Alamofire
 class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate
  {
     var userModel: Json4Swift_Base?
-    var updateModel: UpdateModel_Base?
 
     @IBOutlet weak var txtMobileNumber: UITextField!
     @IBOutlet weak var txtGender: UITextField!
     @IBOutlet weak var txtName: UITextField!
     @IBOutlet weak var lblImage: UIImageView!
     
+    var checkbutton = false
     var imagePicker = UIImagePickerController()
     let api = API()
 
@@ -31,15 +31,23 @@ class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavig
     
     @IBAction func btnupdateProfile(_ sender: UIButton)
     {
-        
-        if txtName.text != "" && txtMobileNumber.text != "" && txtGender.text != "" && lblImage.image != nil
+        if checkbutton
         {
-            Updateprofile()
+            
+            if txtName.text != "" && txtMobileNumber.text != "" && txtGender.text != ""
+            {
+                Updateprofile()
+            }
+            
+            else
+            { openAlert(title: "Alert", message: "Please fill all the field", alertStyle: .alert, actionTitles: ["ok"], actionStyles: [.default], actions: [{ _ in }])
+            }
         }
         else
         {
-            openAlert(title: "Alert", message: "Please fill all the field", alertStyle: .alert, actionTitles: ["ok"], actionStyles: [.default], actions: [{ _ in }])
+            print("you got unknow error")
         }
+        
         
     }
     
@@ -58,18 +66,19 @@ class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavig
         
         api.UploadData(vc: self, params: param, img: lblImage.image ?? UIImage(), url: url, header: header)
         { [self]
-            status, Data in
+            status, Data  in
             if status == 1
             {
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "HomeVC") as! HomeVC
-                vc.updateModel = Data as? UpdateModel_Base
-                self.navigationController?.pushViewController(vc, animated: true)//(animated: true)
+                vc.newcheck = true
+                vc.updateModel = (Data as! UpdateModel_Base)
+                self.navigationController?.pushViewController(vc, animated: true)
             }
         }
     }
     
-    
-    // Image Upload methods
+    // opening gallery or camera to select image
+
     @IBAction func ImageUpload(_ sender: UIButton)
     {
         let alert = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
@@ -83,7 +92,7 @@ class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavig
         self.present(alert, animated: true, completion: nil)
         
     }
-    
+    // Image Upload methods
     func AccessForPhotos(Controller: UIImagePickerController.SourceType)
     {
         if UIImagePickerController.isSourceTypeAvailable(Controller){
@@ -106,7 +115,6 @@ class UpdateProfile: UIViewController , UIImagePickerControllerDelegate, UINavig
     
     func convertImageToBase64String () -> String {
         let converted = lblImage.image?.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
-//        print(converted)
         return converted
     }
 }

@@ -1,7 +1,6 @@
-//
+
 //  updatemodel.swift
 //  LoginDemo
-//
 //  Created by Muhammad Hassan on 31/03/2022.
 //
 
